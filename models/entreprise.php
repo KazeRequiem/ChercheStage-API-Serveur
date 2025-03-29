@@ -49,22 +49,39 @@ class Entreprise_model{
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public static function getLogoEntreprise($id_entreprise){
+        $pdo = Database::connect();
+        $id_entreprise = Database::validateParams($id_entreprise);
+        if (!is_numeric($id_entreprise)) {
+            throw new Exception("ID d'entreprise invalide : $id_entreprise");
+        }
+        $stmt = $pdo->prepare('SELECT logo FROM entreprise WHERE id_entreprise = :id_entreprise');
+        $stmt->execute([':id_entreprise' => $id_entreprise]);
+        $result =  $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['logo'];
+    }
+
     ###CREATORS###
 
-    public static function createEntreprise($nom, $email, $description, $tel, $ville){
+    public static function createEntreprise($nom, $email, $description, $tel, $logo, $ville, $code_postal, $region, $pays){
         $pdo = Database::connect();
         $nom = Database::validateParams($nom);
         $email = Database::validateParams($email);
-        $description = Database::validateParams($description);
         $tel = Database::validateParams($tel);
-        $stmt = $pdo->prepare('INSERT INTO entreprise (nom, email, description, tel) VALUES (:nom, :email, :description, :tel)');
+        $description = trim($description);
+        if (preg_match('/[^\p{L}\p{N}.,\'"()\- ]/u', $description)) {
+            throw new Exception("Paramètre potentiellement dangereux détecté dans la description.");
+        }
+        $stmt = $pdo->prepare('INSERT INTO entreprise (nom, email, description, tel, logo) VALUES (:nom, :email, :description, :tel, :logo)');
         $stmt->execute([
             ':nom' => $nom, 
             ':email' => $email, 
             ':description' => $description, 
-            ':tel' => $tel]);
+            ':tel' => $tel,
+            ':logo' => $logo]);
         $lastId = $pdo->lastInsertId();
-        Se_situe_model::createSeSitue($ville, $lastId);
+        $id_ville = Ville_model::getIdVille($ville, $code_postal, $region, $pays);
+        Se_situe_model::createSeSitue($id_ville, $lastId);
         return self::getEntrepriseById($lastId);
     }
 
@@ -129,15 +146,25 @@ class Entreprise_model{
         return $stmt->execute([':tel' => $tel, ':id_entreprise' => $id_entreprise]);
     }
 
-    public static function updateVilleEntreprise($id_entreprise, $ville){
+    public static function updateVilleEntreprise($id_entreprise, $ville, $code_postal, $region, $pays){
         $id_entreprise = Database::validateParams($id_entreprise);
         if (!is_numeric($id_entreprise)) {
             throw new Exception("ID d'entreprise invalide : $id_entreprise");
         }
-        $id_ville = Ville_model::getIdVille($ville);
+        $id_ville = Ville_model::getIdVille($ville, $code_postal, $region, $pays);
         if (!is_numeric($id_ville)) {
             throw new Exception("ID de ville invalide : $id_ville");
         }
         Se_situe_model::updateSeSitue($id_entreprise, $id_ville);
+    }
+
+    public static function updateLogoEntreprise($id_entreprise, $logo){
+        $pdo = Database::connect();
+        $id_entreprise = Database::validateParams($id_entreprise);
+        if (!is_numeric($id_entreprise)) {
+            throw new Exception("ID d'entreprise invalide : $id_entreprise");
+        }
+        $stmt = $pdo->prepare('UPDATE entreprise SET logo = :logo WHERE id_entreprise = :id_entreprise');
+        return $stmt->execute([':logo' => $logo, ':id_entreprise' => $id_entreprise]);
     }
 }

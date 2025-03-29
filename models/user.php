@@ -33,6 +33,22 @@ class User_model{
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    public static function getUserByPrenom($prenom){
+            $pdo = Database::connect();
+            $prenom = Database::validateParams($prenom);
+            $stmt = $pdo->prepare('SELECT * FROM user WHERE prenom = :prenom');
+            $stmt->execute([':prenom' =>  $prenom]);
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        }
+
+    public static function getUserByNom($nom){
+        $pdo = Database::connect();
+        $nom = Database::validateParams($nom);
+        $stmt = $pdo->prepare('SELECT * FROM user WHERE nom = :nom');
+        $stmt->execute([':nom' =>  $nom]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
     public static function getUserByEmail($email){
         $pdo = Database::connect();
         $email = Database::validateParams($email);
@@ -41,11 +57,11 @@ class User_model{
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public static function getUserByPrenom($prenom){
+    public static function getUserByTel($tel){
         $pdo = Database::connect();
-        $prenom = Database::validateParams($prenom);
-        $stmt = $pdo->prepare('SELECT * FROM user WHERE prenom = :prenom');
-        $stmt->execute([':prenom' =>  $prenom]);
+        $tel = Database::validateParams($tel);
+        $stmt = $pdo->prepare('SELECT * FROM user WHERE tel = :tel');
+        $stmt->execute([':tel' =>  $tel]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
@@ -80,7 +96,6 @@ class User_model{
 
     public static function createUser($prenom, $nom, $email, $mdp, $tel, $date_naissance, $permission, $id_promotion) {
         $pdo = Database::connect();
-    
         $prenom = Database::validateParams($prenom);
         $nom = Database::validateParams($nom);
         $email = Database::validateParams($email);
@@ -88,7 +103,7 @@ class User_model{
         $date_naissance = Database::validateParams($date_naissance);
         $permission = Database::validateParams($permission);
         $id_promotion = (int) Database::validateParams($id_promotion);
-    
+
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             throw new Exception("Email invalide");
         }
@@ -162,15 +177,15 @@ class User_model{
         $stmt = $pdo->prepare('UPDATE user SET email = :email WHERE id_user = :id_user');
         return $stmt->execute([':email' => $email, ':id_user' => $id_user]);
     }
-    public static function updatePasswordUser($id_user,$password){
+    public static function updatePasswordUser($id_user,$mdp){
         $pdo = Database::connect();
         $id_user = Database::validateParams($id_user);
-        $password = Database::validateParams($password);
+        $mdp = Database::validateParams($mdp);
         if (!is_numeric($id_user)) {
             throw new Exception("ID d'utilisateur invalide : $id_user");
         }
         $stmt = $pdo->prepare('UPDATE user SET mdp = :mdp WHERE id_user = :id_user');
-        return $stmt->execute([':mdp' => password_hash($password, PASSWORD_DEFAULT), ':id_user' => $id_user]);
+        return $stmt->execute([':mdp' => password_hash($mdp, PASSWORD_DEFAULT), ':id_user' => $id_user]);
     }
 
     public static function updateTelUser($id_user,$tel){

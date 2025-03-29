@@ -60,7 +60,8 @@ class Note_model{
         }
         $stmt = $pdo->prepare('SELECT AVG(note) as moyenne FROM note WHERE id_entreprise = :id_entreprise');
         $stmt->execute([':id_entreprise' => $id_entreprise]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['moyenne'];
     }
 
     ### CREATORS ###

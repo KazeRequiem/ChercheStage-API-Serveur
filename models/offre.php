@@ -45,6 +45,14 @@ class Offre_model{
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    public static function getOffreByTypeContrat($type_contrat){
+        $pdo = Database::connect();
+        $type_contrat = Database::validateParams($type_contrat);
+        $stmt = $pdo->prepare('SELECT * FROM offre WHERE type_contrat = :type_contrat');
+        $stmt->execute([':type_contrat' => $type_contrat]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public static function getOffreByMotCle($mot_cle){
         $pdo = Database::connect();
         $mot_cle = Database::validateParams($mot_cle);
@@ -75,22 +83,25 @@ class Offre_model{
 
     ### CREATORS ###
 
-    public static function createOffre($titre, $description, $date_debut, $date_fin, $id_entreprise){
+    public static function createOffre($titre, $description, $date_debut, $date_fin, $id_entreprise, $type_contrat, $salaire){
         $pdo = Database::connect();
         $titre = Database::validateParams($titre);
         $description = Database::validateParams($description);
         $date_debut = Database::validateParams($date_debut);
         $date_fin = Database::validateParams($date_fin);
         $id_entreprise = Database::validateParams($id_entreprise);
+        $type_contrat = Database::validateParams($type_contrat);
+        $salaire = Database::validateParams($salaire);
         
-        $stmt = $pdo->prepare('INSERT INTO offre (titre, description, date_debut, date_fin, id_entreprise) VALUES (:titre, :description, :date_debut, :date_fin, :id_entreprise)');
+        $stmt = $pdo->prepare('INSERT INTO offre (titre, description, date_debut, date_fin, id_entreprise, type_contrat, salaire) VALUES (:titre, :description, :date_debut, :date_fin, :id_entreprise, :type_contrat, :salaire)');
         $stmt->execute([
             ':titre' => $titre, 
             ':description' => $description, 
             ':date_debut' => $date_debut, 
             ':date_fin' => $date_fin, 
-            ':id_entreprise' => $id_entreprise]);
-        
+            ':id_entreprise' => $id_entreprise,
+            ':type_contrat' => $type_contrat,
+            ':salaire' => $salaire]);
         $lastId = $pdo->lastInsertId();
         return self::getOffresById($lastId);
     }
@@ -179,4 +190,25 @@ class Offre_model{
         $stmt->execute([':id_entreprise' => $id_entreprise, ':id_offre' => $id_offre]);
     }
 
+    public static function updateTypeContratOffre($id_offre, $type_contrat){
+        $pdo = Database::connect();
+        $id_offre = Database::validateParams($id_offre);
+        if (!is_numeric($id_offre)) {
+            throw new Exception("ID d'offre invalide : $id_offre");
+        }
+        $type_contrat = Database::validateParams($type_contrat);
+        $stmt = $pdo->prepare('UPDATE offre SET type_contrat = :type_contrat WHERE id_offre = :id_offre');
+        $stmt->execute([':type_contrat' => $type_contrat, ':id_offre' => $id_offre]);
+    }
+
+    public static function updateSalaireOffre($id_offre, $salaire){
+        $pdo = Database::connect();
+        $id_offre = Database::validateParams($id_offre);
+        if (!is_numeric($id_offre)) {
+            throw new Exception("ID d'offre invalide : $id_offre");
+        }
+        $salaire = Database::validateParams($salaire);
+        $stmt = $pdo->prepare('UPDATE offre SET salaire = :salaire WHERE id_offre = :id_offre');
+        $stmt->execute([':salaire' => $salaire, ':id_offre' => $id_offre]);
+    }
 }

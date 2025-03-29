@@ -20,17 +20,21 @@ class Database {
         if (!is_scalar($param)) {
             throw new Exception("Paramètre invalide : " . json_encode($param));
         }
-
+    
         // Si le paramètre est une chaîne, on vérifie les caractères
         if (is_string($param)) {
             $param = trim($param);
-            if (preg_match('/[^\w@. -]/', $param)) {  // Autorise lettres, chiffres, _, @, ., espace, -
+            if (preg_match('/[^\p{L}\p{N}@. \-]/u', $param)) {  
+                // \p{L} : Lettres (y compris accentuées)
+                // \p{N} : Chiffres
+                // @ . - : Autorisés explicitement
                 throw new Exception("Paramètre potentiellement dangereux détecté : $param");
             }
         }
-
+    
         return $param;
     }
+    
     
 }
 ?>

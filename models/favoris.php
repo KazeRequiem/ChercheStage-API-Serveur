@@ -59,9 +59,10 @@ class Favoris_model{
         if (!is_numeric($id_user)) {
             throw new Exception('ID d\'utilisateur invalide : $id_user');
         }
-        $stmt = $pdo->prepare('SELECT COUNT(*) FROM favoris WHERE id_user = :id_user');
+        $stmt = $pdo->prepare('SELECT COUNT(*) AS nbFavorisUser FROM favoris WHERE id_user = :id_user');
         $stmt->execute([':id_user' => $id_user]);
-        return $stmt->fetchColumn();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['nbFavorisUser'];
     }
 
     public static function getNbFavorisByIdOffre($id_offre){
@@ -70,9 +71,10 @@ class Favoris_model{
         if (!is_numeric($id_offre)) {
             throw new Exception('ID d\'offre invalide : $id_offre');
         }
-        $stmt = $pdo->prepare('SELECT COUNT(*) FROM favoris WHERE id_offre = :id_offre');
+        $stmt = $pdo->prepare('SELECT COUNT(*) as nbFavorisOffre FROM favoris WHERE id_offre = :id_offre');
         $stmt->execute([':id_offre' => $id_offre]);
-        return $stmt->fetchColumn();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['nbFavorisOffre'];
     }
 
     ### CREATORS ###
