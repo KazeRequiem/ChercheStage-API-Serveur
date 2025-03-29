@@ -5,8 +5,9 @@ class Database {
     public static function connect() {
         if (self::$pdo === null) {
             try {
-                self::$pdo = new PDO('mysql:host=localhost;dbname=projetweb', 'admin', 'pCwNrFqjy1C2y20MR527');
+                self::$pdo = new PDO('mysql:host=localhost;dbname=projetweb;charset=utf8', 'admin', 'pCwNrFqjy1C2y20MR527');
                 self::$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                self::$pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
             } catch (PDOException $e) {
                 die(json_encode(["error" => "Erreur de connexion : " . $e->getMessage()]));
             }
@@ -14,20 +15,22 @@ class Database {
         return self::$pdo;
     }
 
-    public static function validateParams($params) {
-        foreach ($params as $key => $param) {
-            if (!is_scalar($param)) {
-                throw new Exception("Paramètre invalide : $key => " . json_encode($param));
-            }
+    public static function validateParams($param) {
+        // Vérification que le paramètre est scalaire (int, string, float)
+        if (!is_scalar($param)) {
+            throw new Exception("Paramètre invalide : " . json_encode($param));
+        }
 
-            if (is_string($param)) {
-                $param = trim($param);
-                if (preg_match('/[^\w@. -]/', $param)) { // Autorise lettres, chiffres, _, @, ., espace, -
-                    throw new Exception("Paramètre potentiellement dangereux détecté : $param");
-                }
+        // Si le paramètre est une chaîne, on vérifie les caractères
+        if (is_string($param)) {
+            $param = trim($param);
+            if (preg_match('/[^\w@. -]/', $param)) {  // Autorise lettres, chiffres, _, @, ., espace, -
+                throw new Exception("Paramètre potentiellement dangereux détecté : $param");
             }
         }
-        return $params;
+
+        return $param;
     }
+    
 }
 ?>

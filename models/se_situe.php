@@ -4,6 +4,8 @@ require_once 'config/database.php';
 
 class Se_situe{
 
+    ### GETTERS ####
+
     public static function getAllSeSitue(){
         $pdo = Database::connect();
         $stmt = $pdo->prepare('SELECT * FROM se_situe');
@@ -36,6 +38,8 @@ class Se_situe{
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    ### CREATORS ###
+
     public static function createSeSitue($id_ville, $id_entreprise){
         $pdo = Database::connect();
         $id_ville = Database::validateParams($id_ville);
@@ -47,4 +51,30 @@ class Se_situe{
         return self::getSeSitueById($id_entreprise, $id_ville);
     }
     
+    ### DELETORS ###
+
+    public static function deleteSeSitue($id_entreprise, $id_ville){
+        $pdo = Database::connect();
+        $id_entreprise = Database::validateParams($id_entreprise);
+        $id_ville = Database::validateParams($id_ville);
+        $stmt = $pdo->prepare('DELETE FROM se_situe WHERE id_entreprise = :id_entreprise AND id_ville = :id_ville');
+        return $stmt->execute([':id_entreprise' => $id_entreprise, ':id_ville' => $id_ville]);
+    }
+
+    public static function deleteSeSitueByIdEntreprise($id_entreprise){
+        $pdo = Database::connect();
+        $id_entreprise = Database::validateParams($id_entreprise);
+        $stmt = $pdo->prepare('DELETE FROM se_situe WHERE id_entreprise = :id_entreprise');
+        return $stmt->execute([':id_entreprise' => $id_entreprise]);
+    }
+
+    ### UPDATORS ###
+
+    public static function updateSeSitue($id_entreprise, $id_ville){
+        $pdo = Database::connect();
+        $id_entreprise = Database::validateParams($id_entreprise);
+        $id_ville = Database::validateParams($id_ville);
+        $stmt = $pdo->prepare('UPDATE se_situe SET id_ville = :id_ville WHERE id_entreprise = :id_entreprise');
+        return $stmt->execute([':id_entreprise' => $id_entreprise, ':id_ville' => $id_ville]);
+    }
 }

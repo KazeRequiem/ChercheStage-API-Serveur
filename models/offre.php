@@ -1,9 +1,12 @@
 <?php
 
 require_once 'config/database.php';
-
+require_once 'models/postule.php';
+require_once 'models/favoris.php';
 
 class Offre_model{
+
+    ### GETTERS ####
 
     public static function getAllOffres(){
         $pdo = Database::connect();
@@ -42,6 +45,36 @@ class Offre_model{
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    public static function getOffreByMotCle($mot_cle){
+        $pdo = Database::connect();
+        $mot_cle = Database::validateParams($mot_cle);
+        $stmt = $pdo->prepare('SELECT * FROM offre WHERE titre LIKE :mot_cle OR description LIKE :mot_cle');
+        $stmt->execute([':mot_cle' => '%'.$mot_cle.'%']);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public static function getIdOffre($titre, $description, $date_debut, $date_fin, $id_entreprise){
+        $pdo = Database::connect();
+        $titre = Database::validateParams($titre);
+        $description = Database::validateParams($description);
+        $date_debut = Database::validateParams($date_debut);
+        $date_fin = Database::validateParams($date_fin);
+        $id_entreprise = Database::validateParams($id_entreprise);
+        
+        $stmt = $pdo->prepare('SELECT id_offre FROM offre WHERE titre = :titre AND description = :description AND date_debut = :date_debut AND date_fin = :date_fin AND id_entreprise = :id_entreprise');
+        $stmt->execute([
+            ':titre' => $titre, 
+            ':description' => $description, 
+            ':date_debut' => $date_debut, 
+            ':date_fin' => $date_fin, 
+            ':id_entreprise' => $id_entreprise]);
+        
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['id_offre'];
+    }
+
+    ### CREATORS ###
+
     public static function createOffre($titre, $description, $date_debut, $date_fin, $id_entreprise){
         $pdo = Database::connect();
         $titre = Database::validateParams($titre);
@@ -60,6 +93,90 @@ class Offre_model{
         
         $lastId = $pdo->lastInsertId();
         return self::getOffresById($lastId);
+    }
+
+    ### DELETORS ###
+
+    public static function deleteOffre($id_offre){
+        $pdo = Database::connect();
+        $id_offre = Database::validateParams($id_offre);
+        if (!is_numeric($id_offre)) {
+            throw new Exception("ID d'offre invalide : $id_offre");
+        }
+        Postule_model::deletePostuleByIdOffre($id_offre);
+        Favoris_model::deleteFavorisByIdOffre($id_offre);
+        $stmt = $pdo->prepare('DELETE FROM offre WHERE id_offre = :id_offre');
+        return $stmt->execute([':id_offre' => $id_offre]);
+    }
+
+    public static function deleteOffreByIdEntreprise($id_entreprise){
+        $pdo = Database::connect();
+        $id_entreprise = Database::validateParams($id_entreprise);
+        if (!is_numeric($id_entreprise)) {
+            throw new Exception("ID d'entreprise invalide : $id_entreprise");
+        }
+        $stmt = $pdo->prepare('DELETE FROM offre WHERE id_entreprise = :id_entreprise');
+        return $stmt->execute([':id_entreprise' => $id_entreprise]);
+    }
+
+    ### UPDATORS ###
+
+    public static function updateTitreOffre($id_offre, $titre){
+        $pdo = Database::connect();
+        $id_offre = Database::validateParams($id_offre);
+        if (!is_numeric($id_offre)) {
+            throw new Exception("ID d'offre invalide : $id_offre");
+        }
+        $titre = Database::validateParams($titre);
+        $stmt = $pdo->prepare('UPDATE offre SET titre = :titre WHERE id_offre = :id_offre');
+        $stmt->execute([':titre' => $titre, ':id_offre' => $id_offre]);
+    }
+    
+    public static function updateDescriptionOffre($id_offre, $description){
+        $pdo = Database::connect();
+        $id_offre = Database::validateParams($id_offre);
+        if (!is_numeric($id_offre)) {
+            throw new Exception("ID d'offre invalide : $id_offre");
+        }
+        $description = Database::validateParams($description);
+        $stmt = $pdo->prepare('UPDATE offre SET description = :description WHERE id_offre = :id_offre');
+        $stmt->execute([':description' => $description, ':id_offre' => $id_offre]);
+    }
+
+    public static function updateDateDebutOffre($id_offre, $date_debut){
+        $pdo = Database::connect();
+        $id_offre = Database::validateParams($id_offre);
+        if (!is_numeric($id_offre)) {
+            throw new Exception("ID d'offre invalide : $id_offre");
+        }
+        $date_debut = Database::validateParams($date_debut);
+        $stmt = $pdo->prepare('UPDATE offre SET date_debut = :date_debut WHERE id_offre = :id_offre');
+        $stmt->execute([':date_debut' => $date_debut, ':id_offre' => $id_offre]);
+    }
+
+    public static function updateDateFinOffre($id_offre, $date_fin){
+        $pdo = Database::connect();
+        $id_offre = Database::validateParams($id_offre);
+        if (!is_numeric($id_offre)) {
+            throw new Exception("ID d'offre invalide : $id_offre");
+        }
+        $date_fin = Database::validateParams($date_fin);
+        $stmt = $pdo->prepare('UPDATE offre SET date_fin = :date_fin WHERE id_offre = :id_offre');
+        $stmt->execute([':date_fin' => $date_fin, ':id_offre' => $id_offre]);
+    }
+
+    public static function updateIdEntrepriseOffre($id_offre, $id_entreprise){
+        $pdo = Database::connect();
+        $id_offre = Database::validateParams($id_offre);
+        if (!is_numeric($id_offre)) {
+            throw new Exception("ID d'offre invalide : $id_offre");
+        }
+        $id_entreprise = Database::validateParams($id_entreprise);
+        if (!is_numeric($id_entreprise)) {
+            throw new Exception("ID d'entreprise invalide : $id_entreprise");
+        }
+        $stmt = $pdo->prepare('UPDATE offre SET id_entreprise = :id_entreprise WHERE id_offre = :id_offre');
+        $stmt->execute([':id_entreprise' => $id_entreprise, ':id_offre' => $id_offre]);
     }
 
 }

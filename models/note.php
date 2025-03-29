@@ -2,7 +2,9 @@
 
 require_once 'config/database.php';
 
-class Note{
+class Note_model{
+
+    ### GETTERS ####
 
     public static function getAllNotes(){
         $pdo = Database::connect();
@@ -61,6 +63,8 @@ class Note{
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    ### CREATORS ###
+
     public static function createNote($id_entreprise, $id_user, $note){
         $pdo = Database::connect();
         $id_entreprise = Database::validateParams($id_entreprise);
@@ -81,6 +85,67 @@ class Note{
             ':id_user' => $id_user, 
             ':note' => $note]);
         return self::getNoteById($id_entreprise, $id_user);
+    }
+
+    ### DELETORS ###
+
+    public static function deleteNote($id_entreprise, $id_user){
+        $pdo = Database::connect();
+        $id_entreprise = Database::validateParams($id_entreprise);
+        if (!is_numeric($id_entreprise)) {
+            throw new Exception('ID d\'entreprise invalide : $id_entreprise');
+        }
+        $id_user = Database::validateParams($id_user);
+        if (!is_numeric($id_user)) {
+            throw new Exception('ID d\'utilisateur invalide : $id_user');
+        }
+        $stmt = $pdo->prepare('DELETE FROM note WHERE id_entreprise = :id_entreprise AND id_user = :id_user');
+        return $stmt->execute([
+            ':id_entreprise' => $id_entreprise, 
+            ':id_user' => $id_user]);
+    }
+
+    public static function deleteNoteByIdEntreprise($id_entreprise){
+        $pdo = Database::connect();
+        $id_entreprise = Database::validateParams($id_entreprise);
+        if (!is_numeric($id_entreprise)) {
+            throw new Exception('ID d\'entreprise invalide : $id_entreprise');
+        }
+        $stmt = $pdo->prepare('DELETE FROM note WHERE id_entreprise = :id_entreprise');
+        return $stmt->execute([':id_entreprise' => $id_entreprise]);
+    }
+
+    public static function deleteNoteByIdUser($id_user){
+        $pdo = Database::connect();
+        $id_user = Database::validateParams($id_user);
+        if (!is_numeric($id_user)) {
+            throw new Exception('ID d\'utilisateur invalide : $id_user');
+        }
+        $stmt = $pdo->prepare('DELETE FROM note WHERE id_user = :id_user');
+        return $stmt->execute([':id_user' => $id_user]);
+    }
+
+    ### UPDATORS ###
+
+    public static function updateNote($id_entreprise, $id_user, $note){
+        $pdo = Database::connect();
+        $id_entreprise = Database::validateParams($id_entreprise);
+        if (!is_numeric($id_entreprise)) {
+            throw new Exception('ID d\'entreprise invalide : $id_entreprise');
+        }
+        $id_user = Database::validateParams($id_user);
+        if (!is_numeric($id_user)) {
+            throw new Exception('ID d\'utilisateur invalide : $id_user');
+        }
+        $note = Database::validateParams($note);
+        if (!is_numeric($note)) {
+            throw new Exception('Note invalide : $note');
+        }
+        $stmt = $pdo->prepare('UPDATE note SET note = :note WHERE id_entreprise = :id_entreprise AND id_user = :id_user');
+        $stmt->execute([
+            ':note' => $note, 
+            ':id_entreprise' => $id_entreprise, 
+            ':id_user' => $id_user]);
     }
 
 }
