@@ -2,7 +2,7 @@
 
 require_once 'config/database.php';
 
-class Se_situe{
+class Se_situe_model{
 
     ### GETTERS ####
 

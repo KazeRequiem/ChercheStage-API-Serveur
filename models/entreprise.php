@@ -64,7 +64,7 @@ class Entreprise_model{
             ':description' => $description, 
             ':tel' => $tel]);
         $lastId = $pdo->lastInsertId();
-        Se_situe::createSeSitue($ville, $lastId);
+        Se_situe_model::createSeSitue($ville, $lastId);
         return self::getEntrepriseById($lastId);
     }
 
@@ -78,7 +78,7 @@ class Entreprise_model{
         }
         Offre_model::deleteOffreByIdEntreprise($id_entreprise);
         Note_model::deleteNoteByIdEntreprise($id_entreprise);
-        Se_situe::deleteSeSitueByIdEntreprise($id_entreprise);
+        Se_situe_model::deleteSeSitueByIdEntreprise($id_entreprise);
         $stmt = $pdo->prepare('DELETE FROM entreprise WHERE id_entreprise = :id_entreprise');
         return $stmt->execute([':id_entreprise' => $id_entreprise]);
     }
@@ -138,6 +138,6 @@ class Entreprise_model{
         if (!is_numeric($id_ville)) {
             throw new Exception("ID de ville invalide : $id_ville");
         }
-        Se_situe::updateSeSitue($id_entreprise, $id_ville);
+        Se_situe_model::updateSeSitue($id_entreprise, $id_ville);
     }
 }
