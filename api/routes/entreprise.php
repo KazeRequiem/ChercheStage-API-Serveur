@@ -2,7 +2,7 @@
 
 require_once __DIR__ . '/../../config/database.php';  
 require_once __DIR__ . '/../../models/entreprise.php';  
-require_once __DIR__ . '/../middleware/session.php';
+require_once __DIR__ . '/../session/session.php';
 
 if (session_status() == PHP_SESSION_NONE) {
     session_start();

@@ -23,7 +23,7 @@ function requireAuth() {
 function requirePermission($level) {
     if (!isset($_SESSION['permission']) || $_SESSION['permission'] < $level) {
         http_response_code(403);
-        echo json_encode(["error" => "Accès interdit"]);
+        echo json_encode(["error" => "Acces interdit"]);
         exit();
     }
 }

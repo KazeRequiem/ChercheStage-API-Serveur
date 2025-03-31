@@ -1,9 +1,15 @@
 <?php
 require_once __DIR__ . '/../../models/user.php';
-require_once __DIR__ . '/../middleware/session.php';
+require_once __DIR__ . '/../session/session.php';
 
 
 header('Content-Type: application/json');
+
+if (isAuthenticated()){
+    echo json_encode(["error" => "Déjà connecté"]);
+    exit();
+}
+
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $data = json_decode(file_get_contents("php://input"), true);

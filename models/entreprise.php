@@ -84,6 +84,16 @@ class Entreprise_model{
             ':tel' => $tel,
             ':logo' => $logo]);
         $lastId = $pdo->lastInsertId();
+        $stmt = $pdo->prepare('SELECT COUNT(*) FROM ville WHERE ville = :ville AND code_postal = :code_postal AND region = :region AND pays = :pays');
+        $stmt->execute([
+            ':ville' => $ville, 
+            ':code_postal' => $code_postal, 
+            ':region' => $region, 
+            ':pays' => $pays]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($result['COUNT(*)'] == 0) {
+            Ville_model::createVille($ville, $code_postal, $region, $pays);
+        }
         $id_ville = Ville_model::getIdVille($ville, $code_postal, $region, $pays);
         Se_situe_model::createSeSitue($id_ville, $lastId);
         return self::getEntrepriseById($lastId);

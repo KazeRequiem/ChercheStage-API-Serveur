@@ -140,7 +140,7 @@ class Offre_model{
         }
         $titre = Database::validateParams($titre);
         $stmt = $pdo->prepare('UPDATE offres SET titre = :titre WHERE id_offre = :id_offre');
-        $stmt->execute([':titre' => $titre, ':id_offre' => $id_offre]);
+        return $stmt->execute([':titre' => $titre, ':id_offre' => $id_offre]);
     }
     
     public static function updateDescriptionOffre($id_offre, $description){
@@ -151,7 +151,7 @@ class Offre_model{
         }
         $description = Database::validateParams($description);
         $stmt = $pdo->prepare('UPDATE offres SET description = :description WHERE id_offre = :id_offre');
-        $stmt->execute([':description' => $description, ':id_offre' => $id_offre]);
+        return $stmt->execute([':description' => $description, ':id_offre' => $id_offre]);
     }
 
     public static function updateDateDebutOffre($id_offre, $date_debut){
@@ -162,7 +162,7 @@ class Offre_model{
         }
         $date_debut = Database::validateParams($date_debut);
         $stmt = $pdo->prepare('UPDATE offres SET date_debut = :date_debut WHERE id_offre = :id_offre');
-        $stmt->execute([':date_debut' => $date_debut, ':id_offre' => $id_offre]);
+        return $stmt->execute([':date_debut' => $date_debut, ':id_offre' => $id_offre]);
     }
 
     public static function updateDateFinOffre($id_offre, $date_fin){
@@ -187,7 +187,7 @@ class Offre_model{
             throw new Exception("ID d'entreprise invalide : $id_entreprise");
         }
         $stmt = $pdo->prepare('UPDATE offres SET id_entreprise = :id_entreprise WHERE id_offre = :id_offre');
-        $stmt->execute([':id_entreprise' => $id_entreprise, ':id_offre' => $id_offre]);
+        return $stmt->execute([':id_entreprise' => $id_entreprise, ':id_offre' => $id_offre]);
     }
 
     public static function updateTypeContratOffre($id_offre, $type_contrat){
@@ -198,7 +198,7 @@ class Offre_model{
         }
         $type_contrat = Database::validateParams($type_contrat);
         $stmt = $pdo->prepare('UPDATE offres SET type_contrat = :type_contrat WHERE id_offre = :id_offre');
-        $stmt->execute([':type_contrat' => $type_contrat, ':id_offre' => $id_offre]);
+        return $stmt->execute([':type_contrat' => $type_contrat, ':id_offre' => $id_offre]);
     }
 
     public static function updateSalaireOffre($id_offre, $salaire){
@@ -209,6 +209,6 @@ class Offre_model{
         }
         $salaire = Database::validateParams($salaire);
         $stmt = $pdo->prepare('UPDATE offres SET salaire = :salaire WHERE id_offre = :id_offre');
-        $stmt->execute([':salaire' => $salaire, ':id_offre' => $id_offre]);
+        return $stmt->execute([':salaire' => $salaire, ':id_offre' => $id_offre]);
     }
 }
