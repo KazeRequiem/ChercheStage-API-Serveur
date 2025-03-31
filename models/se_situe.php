@@ -1,6 +1,6 @@
 <?php
 
-require_once 'config/database.php';
+require_once __DIR__ . '/../config/database.php';   
 
 class Se_situe_model{
 
@@ -70,11 +70,21 @@ class Se_situe_model{
 
     ### UPDATORS ###
 
-    public static function updateSeSitue($id_entreprise, $id_ville){
+    public static function updateSeSitue($id_entreprise, $id_ville) {
         $pdo = Database::connect();
         $id_entreprise = Database::validateParams($id_entreprise);
         $id_ville = Database::validateParams($id_ville);
-        $stmt = $pdo->prepare('UPDATE se_situe SET id_ville = :id_ville WHERE id_entreprise = :id_entreprise');
+        
+        $stmt = $pdo->prepare('SELECT COUNT(*) FROM se_situe WHERE id_entreprise = :id_entreprise');
+        $stmt->execute([':id_entreprise' => $id_entreprise]);
+        $exists = (int)$stmt->fetchColumn() > 0;
+        
+        if ($exists) {
+            $stmt = $pdo->prepare('UPDATE se_situe SET id_ville = :id_ville WHERE id_entreprise = :id_entreprise');
+        } else {
+            $stmt = $pdo->prepare('INSERT INTO se_situe (id_entreprise, id_ville) VALUES (:id_entreprise, :id_ville)');
+        }
+        
         return $stmt->execute([':id_entreprise' => $id_entreprise, ':id_ville' => $id_ville]);
     }
 }

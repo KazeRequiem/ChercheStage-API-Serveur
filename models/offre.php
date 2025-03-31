@@ -1,8 +1,8 @@
 <?php
 
-require_once 'config/database.php';
-require_once 'models/postule.php';
-require_once 'models/favoris.php';
+require_once __DIR__ . '/../config/database.php';   
+require_once __DIR__ . '/postule.php';
+require_once __DIR__ . '/favoris.php';
 
 class Offre_model{
 

@@ -1,6 +1,6 @@
 <?php
 
-require_once 'config/database.php';
+require_once __DIR__ . '/../config/database.php';   
 
 class Ville_model{
 
@@ -56,13 +56,35 @@ class Ville_model{
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public static function getIdVille($ville, $code_postal, $region, $pays){
+    public static function getIdVille($ville, $code_postal, $region, $pays) {
         $pdo = Database::connect();
-        $ville = Database::validateParams($ville);
+        $ville_param = Database::validateParams($ville);
+        $code_postal_param = Database::validateParams($code_postal);
+        $region_param = Database::validateParams($region);
+        $pays_param = Database::validateParams($pays);
+        
+        // Vérifier si la ville existe déjà
         $stmt = $pdo->prepare('SELECT id_ville FROM ville WHERE ville = :ville AND code_postal = :code_postal AND region = :region AND pays = :pays');
-        $stmt->execute([':ville' => $ville, ':code_postal' => $code_postal, ':region' => $region, ':pays' => $pays]);
-        $result =  $stmt->fetch(PDO::FETCH_ASSOC);
-        return $result['id_ville'];
+        $stmt->execute([
+            ':ville' => $ville_param, 
+            ':code_postal' => $code_postal_param, 
+            ':region' => $region_param, 
+            ':pays' => $pays_param
+        ]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if ($result) {
+            return $result['id_ville'];
+        } else {
+            $stmt = $pdo->prepare('INSERT INTO ville (ville, code_postal, region, pays) VALUES (:ville, :code_postal, :region, :pays)');
+            $stmt->execute([
+                ':ville' => $ville_param, 
+                ':code_postal' => $code_postal_param, 
+                ':region' => $region_param, 
+                ':pays' => $pays_param
+            ]);
+            return $pdo->lastInsertId();
+        }
     }
 
     ### CREATOR ###

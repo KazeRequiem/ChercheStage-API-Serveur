@@ -1,7 +1,9 @@
 <?php
 
-require_once 'config/database.php';
-require_once 'models/se_situe.php';
+require_once __DIR__ . '/../config/database.php';   
+require_once __DIR__ . '/se_situe.php';
+require_once __DIR__ . '/ville.php';
+
 
 class Entreprise_model{
 
@@ -147,15 +149,14 @@ class Entreprise_model{
     }
 
     public static function updateVilleEntreprise($id_entreprise, $ville, $code_postal, $region, $pays){
+        $pdo = Database::connect();
         $id_entreprise = Database::validateParams($id_entreprise);
         if (!is_numeric($id_entreprise)) {
             throw new Exception("ID d'entreprise invalide : $id_entreprise");
         }
         $id_ville = Ville_model::getIdVille($ville, $code_postal, $region, $pays);
-        if (!is_numeric($id_ville)) {
-            throw new Exception("ID de ville invalide : $id_ville");
-        }
-        Se_situe_model::updateSeSitue($id_entreprise, $id_ville);
+        Se_situe_model::updateSeSitue($id_ville, $id_entreprise);
+        return self::getEntrepriseById($id_entreprise);
     }
 
     public static function updateLogoEntreprise($id_entreprise, $logo){

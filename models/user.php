@@ -1,8 +1,8 @@
 <?php
-require_once 'config/database.php';
-require_once 'models/postule.php';
-require_once 'models/favoris.php';
-require_once 'models/note.php';
+require_once __DIR__ . '/../config/database.php';   
+require_once __DIR__ . '/postule.php';
+require_once __DIR__ . '/favoris.php';
+require_once __DIR__ . '/note.php';
 
 class User_model{
 
@@ -29,6 +29,17 @@ class User_model{
             throw new Exception("ID d'utilisateur invalide : $id_user");
         }
         $stmt = $pdo->prepare('SELECT * FROM user WHERE id_user = :id_user');
+        $stmt->execute([':id_user' => $id_user]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public static function getUserByIdWithoutPassword($id_user){
+        $pdo = Database::connect();
+        $id_user = Database::validateParams($id_user);
+        if (!is_numeric($id_user)) {
+            throw new Exception("ID d'utilisateur invalide : $id_user");
+        }
+        $stmt = $pdo->prepare('SELECT id_user, prenom, nom, email, tel, date_naissance, permission, id_promotion FROM user WHERE id_user = :id_user');
         $stmt->execute([':id_user' => $id_user]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
