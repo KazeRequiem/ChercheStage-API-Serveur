@@ -10,7 +10,7 @@ class Offre_model{
 
     public static function getAllOffres(){
         $pdo = Database::connect();
-        $stmt = $pdo->prepare('SELECT * FROM offre');
+        $stmt = $pdo->prepare('SELECT * FROM offres');
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -21,7 +21,7 @@ class Offre_model{
         if (!is_numeric($id_offre)) {
             throw new Exception("ID d'offre invalide : $id_offre");
         }
-        $stmt = $pdo->prepare('SELECT * FROM offre WHERE id_offre = :id_offre');
+        $stmt = $pdo->prepare('SELECT * FROM offres WHERE id_offre = :id_offre');
         $stmt->execute([':id_offre' => $id_offre]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
@@ -29,7 +29,7 @@ class Offre_model{
     public static function getOffreByTitre($titre){
         $pdo = Database::connect();
         $titre = Database::validateParams($titre);
-        $stmt = $pdo->prepare('SELECT * FROM offre WHERE titre = :titre');
+        $stmt = $pdo->prepare('SELECT * FROM offres WHERE titre = :titre');
         $stmt->execute([':titre' => $titre]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
@@ -40,7 +40,7 @@ class Offre_model{
         if (!is_numeric($id_entreprise)) {
             throw new Exception("ID d'entreprise invalide : $id_entreprise");
         }
-        $stmt = $pdo->prepare('SELECT * FROM offre WHERE id_entreprise = :id_entreprise');
+        $stmt = $pdo->prepare('SELECT * FROM offres WHERE id_entreprise = :id_entreprise');
         $stmt->execute([':id_entreprise'=> $id_entreprise]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
@@ -48,7 +48,7 @@ class Offre_model{
     public static function getOffreByTypeContrat($type_contrat){
         $pdo = Database::connect();
         $type_contrat = Database::validateParams($type_contrat);
-        $stmt = $pdo->prepare('SELECT * FROM offre WHERE type_contrat = :type_contrat');
+        $stmt = $pdo->prepare('SELECT * FROM offres WHERE type_contrat = :type_contrat');
         $stmt->execute([':type_contrat' => $type_contrat]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -56,7 +56,7 @@ class Offre_model{
     public static function getOffreByMotCle($mot_cle){
         $pdo = Database::connect();
         $mot_cle = Database::validateParams($mot_cle);
-        $stmt = $pdo->prepare('SELECT * FROM offre WHERE titre LIKE :mot_cle OR description LIKE :mot_cle');
+        $stmt = $pdo->prepare('SELECT * FROM offres WHERE titre LIKE :mot_cle OR description LIKE :mot_cle');
         $stmt->execute([':mot_cle' => '%'.$mot_cle.'%']);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -69,7 +69,7 @@ class Offre_model{
         $date_fin = Database::validateParams($date_fin);
         $id_entreprise = Database::validateParams($id_entreprise);
         
-        $stmt = $pdo->prepare('SELECT id_offre FROM offre WHERE titre = :titre AND description = :description AND date_debut = :date_debut AND date_fin = :date_fin AND id_entreprise = :id_entreprise');
+        $stmt = $pdo->prepare('SELECT id_offre FROM offres WHERE titre = :titre AND description = :description AND date_debut = :date_debut AND date_fin = :date_fin AND id_entreprise = :id_entreprise');
         $stmt->execute([
             ':titre' => $titre, 
             ':description' => $description, 
@@ -93,7 +93,7 @@ class Offre_model{
         $type_contrat = Database::validateParams($type_contrat);
         $salaire = Database::validateParams($salaire);
         
-        $stmt = $pdo->prepare('INSERT INTO offre (titre, description, date_debut, date_fin, id_entreprise, type_contrat, salaire) VALUES (:titre, :description, :date_debut, :date_fin, :id_entreprise, :type_contrat, :salaire)');
+        $stmt = $pdo->prepare('INSERT INTO offres (titre, description, date_debut, date_fin, id_entreprise, type_contrat, salaire) VALUES (:titre, :description, :date_debut, :date_fin, :id_entreprise, :type_contrat, :salaire)');
         $stmt->execute([
             ':titre' => $titre, 
             ':description' => $description, 
@@ -116,7 +116,7 @@ class Offre_model{
         }
         Postule_model::deletePostuleByIdOffre($id_offre);
         Favoris_model::deleteFavorisByIdOffre($id_offre);
-        $stmt = $pdo->prepare('DELETE FROM offre WHERE id_offre = :id_offre');
+        $stmt = $pdo->prepare('DELETE FROM offres WHERE id_offre = :id_offre');
         return $stmt->execute([':id_offre' => $id_offre]);
     }
 
@@ -126,7 +126,7 @@ class Offre_model{
         if (!is_numeric($id_entreprise)) {
             throw new Exception("ID d'entreprise invalide : $id_entreprise");
         }
-        $stmt = $pdo->prepare('DELETE FROM offre WHERE id_entreprise = :id_entreprise');
+        $stmt = $pdo->prepare('DELETE FROM offres WHERE id_entreprise = :id_entreprise');
         return $stmt->execute([':id_entreprise' => $id_entreprise]);
     }
 
@@ -139,7 +139,7 @@ class Offre_model{
             throw new Exception("ID d'offre invalide : $id_offre");
         }
         $titre = Database::validateParams($titre);
-        $stmt = $pdo->prepare('UPDATE offre SET titre = :titre WHERE id_offre = :id_offre');
+        $stmt = $pdo->prepare('UPDATE offres SET titre = :titre WHERE id_offre = :id_offre');
         $stmt->execute([':titre' => $titre, ':id_offre' => $id_offre]);
     }
     
@@ -150,7 +150,7 @@ class Offre_model{
             throw new Exception("ID d'offre invalide : $id_offre");
         }
         $description = Database::validateParams($description);
-        $stmt = $pdo->prepare('UPDATE offre SET description = :description WHERE id_offre = :id_offre');
+        $stmt = $pdo->prepare('UPDATE offres SET description = :description WHERE id_offre = :id_offre');
         $stmt->execute([':description' => $description, ':id_offre' => $id_offre]);
     }
 
@@ -161,7 +161,7 @@ class Offre_model{
             throw new Exception("ID d'offre invalide : $id_offre");
         }
         $date_debut = Database::validateParams($date_debut);
-        $stmt = $pdo->prepare('UPDATE offre SET date_debut = :date_debut WHERE id_offre = :id_offre');
+        $stmt = $pdo->prepare('UPDATE offres SET date_debut = :date_debut WHERE id_offre = :id_offre');
         $stmt->execute([':date_debut' => $date_debut, ':id_offre' => $id_offre]);
     }
 
@@ -172,7 +172,7 @@ class Offre_model{
             throw new Exception("ID d'offre invalide : $id_offre");
         }
         $date_fin = Database::validateParams($date_fin);
-        $stmt = $pdo->prepare('UPDATE offre SET date_fin = :date_fin WHERE id_offre = :id_offre');
+        $stmt = $pdo->prepare('UPDATE offres SET date_fin = :date_fin WHERE id_offre = :id_offre');
         $stmt->execute([':date_fin' => $date_fin, ':id_offre' => $id_offre]);
     }
 
@@ -186,7 +186,7 @@ class Offre_model{
         if (!is_numeric($id_entreprise)) {
             throw new Exception("ID d'entreprise invalide : $id_entreprise");
         }
-        $stmt = $pdo->prepare('UPDATE offre SET id_entreprise = :id_entreprise WHERE id_offre = :id_offre');
+        $stmt = $pdo->prepare('UPDATE offres SET id_entreprise = :id_entreprise WHERE id_offre = :id_offre');
         $stmt->execute([':id_entreprise' => $id_entreprise, ':id_offre' => $id_offre]);
     }
 
@@ -197,7 +197,7 @@ class Offre_model{
             throw new Exception("ID d'offre invalide : $id_offre");
         }
         $type_contrat = Database::validateParams($type_contrat);
-        $stmt = $pdo->prepare('UPDATE offre SET type_contrat = :type_contrat WHERE id_offre = :id_offre');
+        $stmt = $pdo->prepare('UPDATE offres SET type_contrat = :type_contrat WHERE id_offre = :id_offre');
         $stmt->execute([':type_contrat' => $type_contrat, ':id_offre' => $id_offre]);
     }
 
@@ -208,7 +208,7 @@ class Offre_model{
             throw new Exception("ID d'offre invalide : $id_offre");
         }
         $salaire = Database::validateParams($salaire);
-        $stmt = $pdo->prepare('UPDATE offre SET salaire = :salaire WHERE id_offre = :id_offre');
+        $stmt = $pdo->prepare('UPDATE offres SET salaire = :salaire WHERE id_offre = :id_offre');
         $stmt->execute([':salaire' => $salaire, ':id_offre' => $id_offre]);
     }
 }

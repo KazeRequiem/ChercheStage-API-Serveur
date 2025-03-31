@@ -3,6 +3,8 @@
 require_once __DIR__ . '/../config/database.php';   
 require_once __DIR__ . '/se_situe.php';
 require_once __DIR__ . '/ville.php';
+require_once __DIR__ . '/offre.php';
+require_once __DIR__ . '/note.php';
 
 
 class Entreprise_model{
@@ -155,7 +157,7 @@ class Entreprise_model{
             throw new Exception("ID d'entreprise invalide : $id_entreprise");
         }
         $id_ville = Ville_model::getIdVille($ville, $code_postal, $region, $pays);
-        Se_situe_model::updateSeSitue($id_ville, $id_entreprise);
+        Se_situe_model::updateSeSitue($id_entreprise, $id_ville);
         return self::getEntrepriseById($id_entreprise);
     }
 
