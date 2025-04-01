@@ -12,11 +12,11 @@ $method = $_SERVER['REQUEST_METHOD'];
 $request = explode("/", trim($_SERVER['REQUEST_URI'], "/"));
 $action = $request[count($request) - 1];
 
-if (!isAuthenticated()) {
-    http_response_code(401);
-    echo json_encode(["error" => "Utilisateur non authentifié"]);
-    exit;
-}
+//if (!isAuthenticated()) {
+    //http_response_code(401);
+    //echo json_encode(["error" => "Utilisateur non authentifié"]);
+    //exit;
+//}
 
 switch ($method) {
     case 'GET':
