@@ -65,6 +65,20 @@ class Entreprise_model{
         return $result['logo'];
     }
 
+    public static function getAllEntreprisesSortByNom(){
+        $pdo = Database::connect();
+        $stmt = $pdo->prepare('SELECT * FROM entreprise ORDER BY nom');
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public static function getAllEntreprisesSortByVille(){
+        $pdo = Database::connect();
+        $stmt = $pdo->prepare('SELECT * FROM entreprise JOIN se_situe ON entreprise.id_entreprise = se_situe.id_entreprise JOIN ville ON se_situe.id_ville = ville.id_ville ORDER BY ville.ville');
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     ###CREATORS###
 
     public static function createEntreprise($nom, $email, $description, $tel, $logo, $ville, $code_postal, $region, $pays){

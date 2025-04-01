@@ -47,6 +47,12 @@ switch ($method) {
             case 'avg_note':
                 echo json_encode(Offre_model::getAllOffresSortByAvgNote());
                 break;
+            case 'salaire_asc' :
+                echo json_encode(Offre_model::getAllOffresSortBySalaireCroissant());
+                break;
+            case 'salaire_desc' :
+                echo json_encode(Offre_model::getAllOffresSortBySalaireDecroissant());
+                break;
             default:
                 http_response_code(400);
                 echo json_encode(["error" => "Type de tri invalide"]);

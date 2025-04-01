@@ -118,6 +118,21 @@ class Offre_model{
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public static function getAllOffresSortBySalaireDecroissant(){
+        $pdo = Database::connect();
+        $stmt = $pdo->prepare('SELECT * FROM offres ORDER BY salaire DESC');
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public static function getAllOffresSortBySalaireCroissant(){
+        $pdo = Database::connect();
+        $stmt = $pdo->prepare('SELECT * FROM offres ORDER BY salaire ASC');
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+
     ### CREATORS ###
 
     public static function createOffre($titre, $description, $date_debut, $date_fin, $id_entreprise, $type_contrat, $salaire){

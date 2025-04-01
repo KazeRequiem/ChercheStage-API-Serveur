@@ -32,6 +32,19 @@ switch ($method) {
             echo json_encode(Entreprise_model::getEntrepriseByTel($_GET['tel']));
         } elseif ($action === 'logo' && isset($_GET['id'])) {
             echo json_encode(["logo" => Entreprise_model::getLogoEntreprise($_GET['id'])]);
+        } elseif (isset($_GET['sort'])) {
+            switch ($_GET['sort']) {
+                case 'nom':
+                    echo json_encode(Entreprise_model::getAllEntreprisesSortByNom());
+                    break;
+                case 'ville':
+                    echo json_encode(Entreprise_model::getAllEntreprisesSortByVille());
+                    break;
+                default:
+                    http_response_code(400);
+                    echo json_encode(["error" => "Type de tri invalide"]);
+                    break;
+            }
         } else {
             http_response_code(400);
             echo json_encode(["error" => "Requête invalide"]);
