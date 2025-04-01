@@ -5,7 +5,12 @@ class Database {
     public static function connect() {
         if (self::$pdo === null) {
             try {
-                self::$pdo = new PDO('mysql:host=localhost;dbname=projetweb;charset=utf8', 'admin', 'pCwNrFqjy1C2y20MR527');
+                $host = getenv('DB_HOST');
+                $dbname = getenv('DB_NAME');
+                $user = getenv('DB_USER');
+                $pass = getenv('DB_PASS');
+
+                self::$pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $user, $pass);
                 self::$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                 self::$pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
             } catch (PDOException $e) {
