@@ -91,7 +91,6 @@ class Offre_model{
         $date_fin = Database::validateParams($date_fin);
         $id_entreprise = Database::validateParams($id_entreprise);
         $type_contrat = Database::validateParams($type_contrat);
-        $salaire = Database::validateParams($salaire);
         
         $stmt = $pdo->prepare('INSERT INTO offres (titre, description, date_debut, date_fin, id_entreprise, type_contrat, salaire) VALUES (:titre, :description, :date_debut, :date_fin, :id_entreprise, :type_contrat, :salaire)');
         $stmt->execute([

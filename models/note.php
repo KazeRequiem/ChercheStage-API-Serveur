@@ -66,27 +66,34 @@ class Note_model{
 
     ### CREATORS ###
 
-    public static function createNote($id_entreprise, $id_user, $note){
+    public static function createNote($id_entreprise, $id_user, $note) {
         $pdo = Database::connect();
+        
         $id_entreprise = Database::validateParams($id_entreprise);
         if (!is_numeric($id_entreprise)) {
-            throw new Exception('ID d\'entreprise invalide : $id_entreprise');
+            throw new Exception("ID d'entreprise invalide : $id_entreprise");
         }
+    
         $id_user = Database::validateParams($id_user);
         if (!is_numeric($id_user)) {
-            throw new Exception('ID d\'utilisateur invalide : $id_user');
+            throw new Exception("ID d'utilisateur invalide : $id_user");
         }
+    
         $note = Database::validateParams($note);
         if (!is_numeric($note)) {
-            throw new Exception('Note invalide : $note');
+            throw new Exception("Note invalide : $note");
         }
-        $stmt = $pdo->prepare("id_entreprise, id_user, note) VALUES (:id_entreprise, :id_user, :note)");
+        $stmt = $pdo->prepare("INSERT INTO note (id_entreprise, id_user, `note`) VALUES (:id_entreprise, :id_user, :note)");
+        
         $stmt->execute([
             ':id_entreprise' => $id_entreprise, 
             ':id_user' => $id_user, 
-            ':note' => $note]);
+            ':note' => $note
+        ]);
+    
         return self::getNoteById($id_entreprise, $id_user);
     }
+    
 
     ### DELETORS ###
 
@@ -143,7 +150,7 @@ class Note_model{
             throw new Exception('Note invalide : $note');
         }
         $stmt = $pdo->prepare('UPDATE note SET note = :note WHERE id_entreprise = :id_entreprise AND id_user = :id_user');
-        $stmt->execute([
+        return $stmt->execute([
             ':note' => $note, 
             ':id_entreprise' => $id_entreprise, 
             ':id_user' => $id_user]);

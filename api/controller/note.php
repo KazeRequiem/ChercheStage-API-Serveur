@@ -2,7 +2,7 @@
 
 require_once __DIR__ . '/../../config/database.php';  
 require_once __DIR__ . '/../../models/note.php';  
-require_once __DIR__ . '/../middleware/session.php';
+require_once __DIR__ . '/../session/session.php';
 
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
@@ -46,16 +46,36 @@ switch ($method) {
         break;
     
     case 'PUT':
-        requirePermission(0);
-        $data = json_decode(file_get_contents("php://input"), true);
-        if (!isset($data['id_entreprise']) || !isset($data['id_user']) || !isset($data['note'])) {
+        requirePermission(1);
+    
+        if (!isset($_GET['id_entreprise'], $_GET['id_user'])) {
             http_response_code(400);
-            echo json_encode(["error" => "Paramètres invalides"]);
+            echo json_encode(["error" => "ID entreprise et ID utilisateur requis"]);
             exit;
         }
-        Note_model::updateNote($data['id_entreprise'], $data['id_user'], $data['note']);
-        echo json_encode(["success" => true]);
-        break;
+    
+        $id_entreprise = intval($_GET['id_entreprise']);
+        $id_user = intval($_GET['id_user']);
+    
+        $data = json_decode(file_get_contents("php://input"), true);
+    
+        $updatedFields = [];
+    
+        if (isset($data['note'])) {
+            $updatedFields['note'] = Note_model::updateNote($id_entreprise, $id_user, $data['note']);
+        }
+    
+        if (empty($updatedFields)) {
+            http_response_code(400);
+            echo json_encode(["error" => "Aucun champ valide à mettre à jour"]);
+            exit;
+        }
+    
+        echo json_encode([
+            "success" => true,
+            "updated_fields" => $updatedFields
+        ]);
+        break;        
     
     case 'DELETE':
         if (isset($_GET['id_entreprise']) && isset($_GET['id_user'])) {

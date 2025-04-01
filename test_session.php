@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/api/middleware/session.php';
+require_once __DIR__ . '/api/session/session.php';
 
 header('Content-Type: application/json');
 

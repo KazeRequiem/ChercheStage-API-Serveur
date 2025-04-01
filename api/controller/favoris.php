@@ -2,7 +2,7 @@
 
 require_once __DIR__ . '/../../config/database.php';  
 require_once __DIR__ . '/../../models/favoris.php';  
-require_once __DIR__ . '/../middleware/session.php';
+require_once __DIR__ . '/../session/session.php';
 
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
@@ -43,9 +43,19 @@ switch ($method) {
     
     case 'POST':
         requirePermission(0);
-        $data = json_decode(file_get_contents("php://input"), true);
-        echo json_encode(Favoris_model::createFavoris($data['id_offre'], $data['id_user']));
+        
+        if (!isset($_GET['id_offre'], $_GET['id_user'])) {
+            http_response_code(400);
+            echo json_encode(["error" => "Paramètres manquants : id_offre et id_user requis"]);
+            exit;
+        }
+    
+        $id_offre = intval($_GET['id_offre']);
+        $id_user = intval($_GET['id_user']);
+    
+        echo json_encode(Favoris_model::createFavoris($id_offre, $id_user));
         break;
+        
     
     case 'DELETE':
         requirePermission(0);

@@ -148,6 +148,7 @@ class User_model{
         Postule_model::deletePostuleByIdUser($id_user);
         Favoris_model::deleteFavorisByIdUser($id_user);
         Note_model::deleteNoteByIdUser($id_user);
+        Ticket_model::deleteTicketByIdUser($id_user);
         $stmt = $pdo->prepare('DELETE FROM user WHERE id_user = :id_user');
         return $stmt->execute([':id_user' => $id_user]);
     }
