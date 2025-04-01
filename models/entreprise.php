@@ -3,7 +3,7 @@
 require_once __DIR__ . '/../config/database.php';   
 require_once __DIR__ . '/se_situe.php';
 require_once __DIR__ . '/ville.php';
-require_once __DIR__ . '/offre.php';
+require_once __DIR__ . '/offres.php';
 require_once __DIR__ . '/note.php';
 
 
