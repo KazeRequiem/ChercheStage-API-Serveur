@@ -20,24 +20,43 @@ if (!isAuthenticated()) {
 
 switch ($method) {
     case 'GET':
-        requirePermission(0);
-        if ($action === 'offres') {
-            echo json_encode(Offre_model::getAllOffres());
-        } elseif (is_numeric($action)) {
-            echo json_encode(Offre_model::getOffresById($action));
-        } elseif (isset($_GET['titre'])) {
-            echo json_encode(Offre_model::getOffreByTitre($_GET['titre']));
-        } elseif (isset($_GET['id_entreprise'])) {
-            echo json_encode(Offre_model::getOffreByIdEntreprise($_GET['id_entreprise']));
-        } elseif (isset($_GET['type_contrat'])) {
-            echo json_encode(Offre_model::getOffreByTypeContrat($_GET['type_contrat']));
-        } elseif (isset($_GET['mot_cle'])) {
-            echo json_encode(Offre_model::getOffreByMotCle($_GET['mot_cle']));
-        } else {
-            http_response_code(400);
-            echo json_encode(["error" => "Requête invalide"]);
+    requirePermission(0);
+    if ($action === 'offres') {
+        echo json_encode(Offre_model::getAllOffres());
+    } elseif (is_numeric($action)) {
+        echo json_encode(Offre_model::getOffresById($action));
+    } elseif (isset($_GET['titre'])) {
+        echo json_encode(Offre_model::getOffreByTitre($_GET['titre']));
+    } elseif (isset($_GET['id_entreprise'])) {
+        echo json_encode(Offre_model::getOffreByIdEntreprise($_GET['id_entreprise']));
+    } elseif (isset($_GET['type_contrat'])) {
+        echo json_encode(Offre_model::getOffreByTypeContrat($_GET['type_contrat']));
+    } elseif (isset($_GET['mot_cle'])) {
+        echo json_encode(Offre_model::getOffreByMotCle($_GET['mot_cle']));
+    } elseif (isset($_GET['sort'])) {
+        switch ($_GET['sort']) {
+            case 'nom':
+                echo json_encode(Offre_model::getAllOffreSortByNom());
+                break;
+            case 'nb_candidatures':
+                echo json_encode(Offre_model::getAllOffresSortByNbCandid());
+                break;
+            case 'localisation':
+                echo json_encode(Offre_model::getAllOffresSortByLocalisation());
+                break;
+            case 'avg_note':
+                echo json_encode(Offre_model::getAllOffresSortByAvgNote());
+                break;
+            default:
+                http_response_code(400);
+                echo json_encode(["error" => "Type de tri invalide"]);
+                break;
         }
-        break;
+    } else {
+        http_response_code(400);
+        echo json_encode(["error" => "Requête invalide"]);
+    }
+    break;
     
     case 'POST':
         requirePermission(1);

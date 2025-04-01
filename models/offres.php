@@ -81,6 +81,43 @@ class Offre_model{
         return $result['id_offre'];
     }
 
+    public static function getAllOffreSortByNom(){
+        $pdo = Database::connect();
+        $stmt = $pdo->prepare('SELECT * FROM offres ORDER BY titre');
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public static function getAllOffresSortByNbCandid() {
+        $pdo = Database::connect(); // Connexion à la base de données
+        $stmt = $pdo->prepare('SELECT offres.*, entreprise.nom AS nom_entreprise, ville.nom AS nom_ville, 
+            COUNT(postule.id_offre) AS nb_candidatures 
+            FROM offres
+            JOIN entreprise ON offres.id_entreprise = entreprise.id_entreprise
+            JOIN se_situe ON entreprise.id_entreprise = se_situe.id_entreprise
+            JOIN ville ON se_situe.id_ville = ville.id_ville
+            LEFT JOIN postule ON offres.id_offre = postule.id_offre
+            GROUP BY offres.id_offre
+            ORDER BY nb_candidatures DESC;'); 
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
+
+    public static function getAllOffresSortByLocalisation(){
+        $pdo = Database::connect();
+        $stmt = $pdo->prepare('SELECT * FROM offres ORDER BY ville');
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public static function getAllOffresSortByAvgNote(){
+        $pdo = Database::connect();
+        $stmt = $pdo->prepare('SELECT * FROM offres LEFT JOIN note ON offres.id_entreprise = note.id_entreprise GROUP BY offres.id_offre ORDER BY AVG(note.note) DESC');
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     ### CREATORS ###
 
     public static function createOffre($titre, $description, $date_debut, $date_fin, $id_entreprise, $type_contrat, $salaire){
