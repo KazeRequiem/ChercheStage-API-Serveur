@@ -32,6 +32,9 @@ switch ($method) {
             echo json_encode(Entreprise_model::getEntrepriseByTel($_GET['tel']));
         } elseif ($action === 'logo' && isset($_GET['id'])) {
             echo json_encode(["logo" => Entreprise_model::getLogoEntreprise($_GET['id'])]);
+        } elseif (isset($_GET['mot_cle'])) {
+            echo json_encode(Entreprise_model::getEntrepriseByMotCle($_GET['mot_cle']));
+            break;
         } elseif (isset($_GET['sort'])) {
             switch ($_GET['sort']) {
                 case 'nom':

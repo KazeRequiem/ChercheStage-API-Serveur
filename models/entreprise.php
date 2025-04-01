@@ -65,6 +65,14 @@ class Entreprise_model{
         return $result['logo'];
     }
 
+    public static function getEntrepriseByMotCle($motCle){
+        $pdo = Database::connect();
+        $motCle = Database::validateParams($motCle);
+        $stmt = $pdo->prepare('SELECT * FROM entreprise WHERE nom LIKE :motCle OR description LIKE :motCle');
+        $stmt->execute([':motCle' => '%' . $motCle . '%']);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public static function getAllEntreprisesSortByNom(){
         $pdo = Database::connect();
         $stmt = $pdo->prepare('SELECT * FROM entreprise ORDER BY nom');
