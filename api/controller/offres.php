@@ -76,9 +76,9 @@ switch ($method) {
         requirePermission(1);
         
         $data = json_decode(file_get_contents("php://input"), true);
-        echo json_encode(Offre_model::createOffre(
+        echo json_encode(Offre_model::createOffreWithNomEntreprise(
             $data['titre'], $data['description'], $data['date_debut'],
-            $data['date_fin'], $data['id_entreprise'], $data['type_contrat'], $data['salaire']
+            $data['date_fin'], $data['nom_entreprise'], $data['type_contrat'], $data['salaire']
         ));
         break;
     

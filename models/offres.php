@@ -149,6 +149,29 @@ class Offre_model{
         return self::getOffresById($lastId);
     }
 
+    public static function createOffreWithNomEntreprise($titre, $description, $date_debut, $date_fin, $nom_entreprise, $type_contrat, $salaire){
+        $pdo = Database::connect();
+        $titre = Database::validateParams($titre);
+        $description = Database::validateParams($description);
+        $date_debut = Database::validateParams($date_debut);
+        $date_fin = Database::validateParams($date_fin);
+        $nom_entreprise = Database::validateParams($nom_entreprise);
+        $type_contrat = Database::validateParams($type_contrat);
+        
+        // Récupérer l'ID de l'entreprise à partir de son nom
+        $stmt = $pdo->prepare('SELECT id_entreprise FROM entreprise WHERE nom = :nom_entreprise');
+        $stmt->execute([':nom_entreprise' => $nom_entreprise]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if ($result) {
+            $id_entreprise = $result['id_entreprise'];
+            // Créer l'offre avec l'ID de l'entreprise récupéré
+            return self::createOffre($titre, $description, $date_debut, $date_fin, $id_entreprise, $type_contrat, $salaire);
+        } else {
+            throw new Exception("L'entreprise '$nom_entreprise' n'existe pas.");
+        }
+    }
+
     ### DELETORS ###
 
     public static function deleteOffre($id_offre){

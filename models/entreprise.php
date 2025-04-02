@@ -127,6 +127,12 @@ class Entreprise_model{
         if (preg_match('/[^\p{L}\p{N}.,\'"()\- ]/u', $description)) {
             throw new Exception("Paramètre potentiellement dangereux détecté dans la description.");
         }
+        $stmt = $pdo->prepare('SELECT COUNT(*) FROM entreprise WHERE nom = :nom');
+        $stmt->execute([':nom' => $nom]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($result['COUNT(*)'] > 0) {
+            throw new Exception("Une entreprise avec ce nom existe déjà.");
+        }
         $stmt = $pdo->prepare('INSERT INTO entreprise (nom, email, description, tel, logo) VALUES (:nom, :email, :description, :tel, :logo)');
         $stmt->execute([
             ':nom' => $nom, 
