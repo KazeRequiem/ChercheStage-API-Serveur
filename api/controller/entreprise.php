@@ -50,8 +50,6 @@ switch ($method) {
             echo json_encode(Entreprise_model::getAllEntreprisesByVille($_GET['ville']));
         } elseif (isset($_GET['code_postal'])) {
             echo json_encode(Entreprise_model::getAllEntreprisesByCodePostal($_GET['code_postal']));
-        } elseif (isset($_GET['region'])) {
-            echo json_encode(Entreprise_model::getAllEntreprisesByRegion($_GET['region']));
         } elseif (isset($_GET['pays'])) {
             echo json_encode(Entreprise_model::getAllEntreprisesByPays($_GET['pays']));
         } elseif (isset($_GET['sort'])) {
@@ -80,7 +78,7 @@ switch ($method) {
         echo json_encode(Entreprise_model::createEntreprise(
             $data['nom'], $data['email'], $data['description'],
             $data['tel'], $data['logo'], $data['ville'],
-            $data['code_postal'], $data['region'], $data['pays']
+            $data['code_postal'],  $data['pays']
         ));
         break;
     
@@ -110,8 +108,8 @@ switch ($method) {
         if (isset($data['tel'])) {
             $updatedFields['tel'] = Entreprise_model::updateTelEntreprise($id_entreprise, $data['tel']);
         }
-        if (isset($data['ville'], $data['code_postal'], $data['region'], $data['pays'])) {
-            $updatedFields['ville'] = Entreprise_model::updateVilleEntreprise($id_entreprise, $data['ville'], $data['code_postal'], $data['region'], $data['pays']);
+        if (isset($data['ville'], $data['code_postal'], $data['pays'])) {
+            $updatedFields['ville'] = Entreprise_model::updateVilleEntreprise($id_entreprise, $data['ville'], $data['code_postal'],  $data['pays']);
         }
         if (isset($data['logo'])) {
             $updatedFields['logo'] = Entreprise_model::updateLogoEntreprise($id_entreprise, $data['logo']);

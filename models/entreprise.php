@@ -88,13 +88,6 @@ class Entreprise_model{
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public static function getAllEntreprisesByRegion($region){
-        $pdo = Database::connect();
-        $region = Database::validateParams($region);
-        $stmt = $pdo->prepare('SELECT * FROM entreprise JOIN se_situe ON entreprise.id_entreprise = se_situe.id_entreprise JOIN ville ON se_situe.id_ville = ville.id_ville WHERE ville.region = :region');
-        $stmt->execute([':region' => $region]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
     public static function getAllEntreprisesByPays($pays){
         $pdo = Database::connect();
         $pays = Database::validateParams($pays);
@@ -125,7 +118,7 @@ class Entreprise_model{
 
     ###CREATORS###
 
-    public static function createEntreprise($nom, $email, $description, $tel, $logo, $ville, $code_postal, $region, $pays){
+    public static function createEntreprise($nom, $email, $description, $tel, $logo, $ville, $code_postal, $pays){
         $pdo = Database::connect();
         $nom = Database::validateParams($nom);
         $email = Database::validateParams($email);
@@ -142,11 +135,10 @@ class Entreprise_model{
             ':tel' => $tel,
             ':logo' => $logo]);
         $lastId = $pdo->lastInsertId();
-        $stmt = $pdo->prepare('SELECT COUNT(*) FROM ville WHERE ville = :ville AND code_postal = :code_postal AND region = :region AND pays = :pays');
+        $stmt = $pdo->prepare('SELECT COUNT(*) FROM ville WHERE ville = :ville AND code_postal = :code_postal AND pays = :pays');
         $stmt->execute([
             ':ville' => $ville, 
-            ':code_postal' => $code_postal, 
-            ':region' => $region, 
+            ':code_postal' => $code_postal,  
             ':pays' => $pays]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($result['COUNT(*)'] == 0) {
@@ -218,7 +210,7 @@ class Entreprise_model{
         return $stmt->execute([':tel' => $tel, ':id_entreprise' => $id_entreprise]);
     }
 
-    public static function updateVilleEntreprise($id_entreprise, $ville, $code_postal, $region, $pays){
+    public static function updateVilleEntreprise($id_entreprise, $ville, $code_postal, $pays){
         $pdo = Database::connect();
         $id_entreprise = Database::validateParams($id_entreprise);
         if (!is_numeric($id_entreprise)) {
