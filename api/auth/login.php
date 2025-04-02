@@ -13,7 +13,7 @@ if ($_SERVER["REQUEST_METHOD"] === "OPTIONS") {
 }
 
 if (isAuthenticated()) {
-    http_response_code(403); // 403 = Accès refusé
+    http_response_code(403); // Accès refusé
     echo json_encode(["error" => "Déjà connecté"]);
     exit();
 }
@@ -22,7 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $data = json_decode(file_get_contents("php://input"), true);
 
     if (!isset($data['email'], $data['mdp'])) {
-        http_response_code(400); // 400 = Mauvaise requête
+        http_response_code(400); // Mauvaise requête
         echo json_encode(["error" => "Email et mot de passe requis"]);
         exit();
     }
@@ -30,13 +30,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $user = User_model::getUserByEmail($data['email']);
 
     if (!$user) {
-        http_response_code(401); // 401 = Non autorisé
+        http_response_code(401); // Non autorisé
         echo json_encode(["error" => "Utilisateur non trouvé"]);
         exit();
     }
 
     if (!password_verify($data['mdp'], $user['mdp'])) {
-        http_response_code(401); // 401 = Non autorisé
+        http_response_code(401); // Non autorisé
         echo json_encode(["error" => "Mot de passe incorrect"]);
         exit();
     }
@@ -54,4 +54,3 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         ]
     ]);
 }
-?>
