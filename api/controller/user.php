@@ -101,7 +101,14 @@ switch ($method) {
         break;
     
     case 'DELETE':
-        requirePermission(2);
+        requirePermission(1);
+
+        $data = json_decode(file_get_contents("php://input"), true);
+        if ($_SESSION['permission'] < 2 && $data['permission'] > 0) {
+            http_response_code(403);
+            echo json_encode(["error" => "Permission insuffisante"]);
+            exit;
+        }
         
         if (is_numeric($action)) {
             echo json_encode(["success" => User_model::deleteUser($action)]);
