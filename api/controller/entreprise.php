@@ -21,7 +21,7 @@ $action = $request[count($request) - 1];
 switch ($method) {
     case 'GET':
         if ($action === 'entreprises') {
-            echo json_encode(Entreprise_model::getAllEntreprises());
+            echo json_encode(Entreprise_model::getAllEntreprisesWithVille());
         } elseif (is_numeric($action)) {
             echo json_encode(Entreprise_model::getEntrepriseById($action));
         } elseif (isset($_GET['nom'])) {

@@ -18,6 +18,13 @@ class Entreprise_model{
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public static function getAllEntreprisesWithVille(){
+        $pdo = Database::connect();
+        $stmt = $pdo->prepare('SELECT * FROM entreprise JOIN se_situe ON entreprise.id_entreprise = se_situe.id_entreprise JOIN ville ON se_situe.id_ville = ville.id_ville');
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public static function getEntrepriseById($id_entreprise){
         $pdo = Database::connect();
         $id_entreprise = Database::validateParams($id_entreprise);
