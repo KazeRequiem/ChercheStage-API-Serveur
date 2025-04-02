@@ -104,10 +104,16 @@ class Offre_model{
     }
     
 
-    public static function getAllOffresSortByLocalisation(){
+    public static function getAllOffresByVille($ville){
         $pdo = Database::connect();
-        $stmt = $pdo->prepare('SELECT * FROM offres ORDER BY ville');
-        $stmt->execute();
+        $ville = Database::validateParams($ville);
+        $stmt = $pdo->prepare('SELECT offres.*, entreprise.nom AS nom_entreprise, ville.nom AS nom_ville 
+            FROM offres
+            JOIN entreprise ON offres.id_entreprise = entreprise.id_entreprise
+            JOIN se_situe ON entreprise.id_entreprise = se_situe.id_entreprise
+            JOIN ville ON se_situe.id_ville = ville.id_ville
+            WHERE ville.nom = :ville');
+        $stmt->execute([':ville' => $ville]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 

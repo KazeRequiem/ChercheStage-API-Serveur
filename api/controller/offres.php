@@ -42,7 +42,9 @@ switch ($method) {
         echo json_encode(Offre_model::getOffreByIdEntreprise($_GET['id_entreprise']));
     } elseif (isset($_GET['type_contrat'])) {
         echo json_encode(Offre_model::getOffreByTypeContrat($_GET['type_contrat']));
-    } elseif (isset($_GET['mot_cle'])) {
+    } elseif (isset($_GET['ville'])) {
+        echo json_encode(Offre_model::getAllOffresByVille($_GET['ville']));
+    }elseif (isset($_GET['mot_cle'])) {
         echo json_encode(Offre_model::getOffreByMotCle($_GET['mot_cle']));
     } elseif (isset($_GET['sort'])) {
         switch ($_GET['sort']) {
@@ -51,9 +53,6 @@ switch ($method) {
                 break;
             case 'nb_candidatures':
                 echo json_encode(Offre_model::getAllOffresSortByNbCandid());
-                break;
-            case 'localisation':
-                echo json_encode(Offre_model::getAllOffresSortByLocalisation());
                 break;
             case 'avg_note':
                 echo json_encode(Offre_model::getAllOffresSortByAvgNote());
