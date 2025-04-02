@@ -177,7 +177,12 @@ class Offre_model{
         if (!is_numeric($id_entreprise)) {
             throw new Exception("ID d'entreprise invalide : $id_entreprise");
         }
+    
+        $stmt = $pdo->prepare('DELETE FROM favoris WHERE id_offre IN (SELECT id_offre FROM offres WHERE id_entreprise = :id_entreprise)');
+        $stmt->execute([':id_entreprise' => $id_entreprise]);
+    
         Postule_model::deletePostuleByIdEntreprise($id_entreprise);
+    
         $stmt = $pdo->prepare('DELETE FROM offres WHERE id_entreprise = :id_entreprise');
         return $stmt->execute([':id_entreprise' => $id_entreprise]);
     }
