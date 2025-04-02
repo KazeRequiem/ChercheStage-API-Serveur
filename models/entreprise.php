@@ -73,6 +73,35 @@ class Entreprise_model{
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public static function getAllEntreprisesByVille($ville){
+        $pdo = Database::connect();
+        $ville = Database::validateParams($ville);
+        $stmt = $pdo->prepare('SELECT * FROM entreprise JOIN se_situe ON entreprise.id_entreprise = se_situe.id_entreprise JOIN ville ON se_situe.id_ville = ville.id_ville WHERE ville.ville = :ville');
+        $stmt->execute([':ville' => $ville]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public static function getAllEntreprisesByRegion($region){
+        $pdo = Database::connect();
+        $region = Database::validateParams($region);
+        $stmt = $pdo->prepare('SELECT * FROM entreprise JOIN se_situe ON entreprise.id_entreprise = se_situe.id_entreprise JOIN ville ON se_situe.id_ville = ville.id_ville WHERE ville.region = :region');
+        $stmt->execute([':region' => $region]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public static function getAllEntreprisesByPays($pays){
+        $pdo = Database::connect();
+        $pays = Database::validateParams($pays);
+        $stmt = $pdo->prepare('SELECT * FROM entreprise JOIN se_situe ON entreprise.id_entreprise = se_situe.id_entreprise JOIN ville ON se_situe.id_ville = ville.id_ville WHERE ville.pays = :pays');
+        $stmt->execute([':pays' => $pays]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public static function getAllEntreprisesByCodePostal($code_postal){
+        $pdo = Database::connect();
+        $code_postal = Database::validateParams($code_postal);
+        $stmt = $pdo->prepare('SELECT * FROM entreprise JOIN se_situe ON entreprise.id_entreprise = se_situe.id_entreprise JOIN ville ON se_situe.id_ville = ville.id_ville WHERE ville.code_postal = :code_postal');
+        $stmt->execute([':code_postal' => $code_postal]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
     public static function getAllEntreprisesSortByNom(){
         $pdo = Database::connect();
         $stmt = $pdo->prepare('SELECT * FROM entreprise ORDER BY nom');

@@ -35,6 +35,14 @@ switch ($method) {
         } elseif (isset($_GET['mot_cle'])) {
             echo json_encode(Entreprise_model::getEntrepriseByMotCle($_GET['mot_cle']));
             break;
+        } elseif (isset($_GET['ville'])) {
+            echo json_encode(Entreprise_model::getAllEntreprisesByVille($_GET['ville']));
+        } elseif (isset($_GET['code_postal'])) {
+            echo json_encode(Entreprise_model::getAllEntreprisesByCodePostal($_GET['code_postal']));
+        } elseif (isset($_GET['region'])) {
+            echo json_encode(Entreprise_model::getAllEntreprisesByRegion($_GET['region']));
+        } elseif (isset($_GET['pays'])) {
+            echo json_encode(Entreprise_model::getAllEntreprisesByPays($_GET['pays']));
         } elseif (isset($_GET['sort'])) {
             switch ($_GET['sort']) {
                 case 'nom':
