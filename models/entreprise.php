@@ -150,9 +150,9 @@ class Entreprise_model{
             ':pays' => $pays]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($result['COUNT(*)'] == 0) {
-            Ville_model::createVille($ville, $code_postal, $region, $pays);
+            Ville_model::createVille($ville, $code_postal, $pays);
         }
-        $id_ville = Ville_model::getIdVille($ville, $code_postal, $region, $pays);
+        $id_ville = Ville_model::getIdVille($ville, $code_postal, $pays);
         Se_situe_model::createSeSitue($id_ville, $lastId);
         return self::getEntrepriseById($lastId);
     }
@@ -224,7 +224,7 @@ class Entreprise_model{
         if (!is_numeric($id_entreprise)) {
             throw new Exception("ID d'entreprise invalide : $id_entreprise");
         }
-        $id_ville = Ville_model::getIdVille($ville, $code_postal, $region, $pays);
+        $id_ville = Ville_model::getIdVille($ville, $code_postal, $pays);
         Se_situe_model::updateSeSitue($id_entreprise, $id_ville);
         return self::getEntrepriseById($id_entreprise);
     }

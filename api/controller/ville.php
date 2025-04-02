@@ -28,8 +28,6 @@ switch ($method) {
             echo json_encode(Ville_model::getAllVillesByName($_GET['nom']));
         } elseif (isset($_GET['code_postal'])) {
             echo json_encode(Ville_model::getAllVillesByCodePostal($_GET['code_postal']));
-        } elseif (isset($_GET['region'])) {
-            echo json_encode(Ville_model::getAllVillesByRegion($_GET['region']));
         } elseif (isset($_GET['pays'])) {
             echo json_encode(Ville_model::getAllVillesByCountry($_GET['pays']));
         } else {
@@ -44,7 +42,7 @@ switch ($method) {
         $data = json_decode(file_get_contents("php://input"), true);
         echo json_encode(Ville_model::createVille(
             $data['ville'], $data['code_postal'],
-            $data['region'], $data['pays']
+            $data['pays']
         ));
         break;
     
@@ -67,9 +65,6 @@ switch ($method) {
         }
         if (isset($data['code_postal'])) {
             $updatedFields['code_postal'] = Ville_model::updateCodePostal($id_ville, $data['code_postal']);
-        }
-        if (isset($data['region'])) {
-            $updatedFields['region'] = Ville_model::updateRegion($id_ville, $data['region']);
         }
         if (isset($data['pays'])) {
             $updatedFields['pays'] = Ville_model::updatePays($id_ville, $data['pays']);

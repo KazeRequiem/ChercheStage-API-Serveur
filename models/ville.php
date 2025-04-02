@@ -40,14 +40,6 @@ class Ville_model{
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public static function getAllVillesByRegion($region){
-        $pdo = Database::connect();
-        $region = Database::validateParams($region);
-        $stmt = $pdo->prepare('SELECT * FROM ville WHERE region = :region');
-        $stmt->execute([':region' => $region]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
     public static function getAllVillesByCountry($pays){
         $pdo = Database::connect();
         $pays = Database::validateParams($pays);
@@ -56,19 +48,17 @@ class Ville_model{
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public static function getIdVille($ville, $code_postal, $region, $pays) {
+    public static function getIdVille($ville, $code_postal, $pays) {
         $pdo = Database::connect();
         $ville_param = Database::validateParams($ville);
         $code_postal_param = Database::validateParams($code_postal);
-        $region_param = Database::validateParams($region);
         $pays_param = Database::validateParams($pays);
         
         // Vérifier si la ville existe déjà
-        $stmt = $pdo->prepare('SELECT id_ville FROM ville WHERE ville = :ville AND code_postal = :code_postal AND region = :region AND pays = :pays');
+        $stmt = $pdo->prepare('SELECT id_ville FROM ville WHERE ville = :ville AND code_postal = :code_postal AND pays = :pays');
         $stmt->execute([
             ':ville' => $ville_param, 
             ':code_postal' => $code_postal_param, 
-            ':region' => $region_param, 
             ':pays' => $pays_param
         ]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -76,11 +66,10 @@ class Ville_model{
         if ($result) {
             return $result['id_ville'];
         } else {
-            $stmt = $pdo->prepare('INSERT INTO ville (ville, code_postal, region, pays) VALUES (:ville, :code_postal, :region, :pays)');
+            $stmt = $pdo->prepare('INSERT INTO ville (ville, code_postal, pays) VALUES (:ville, :code_postal, :pays)');
             $stmt->execute([
                 ':ville' => $ville_param, 
                 ':code_postal' => $code_postal_param, 
-                ':region' => $region_param, 
                 ':pays' => $pays_param
             ]);
             return $pdo->lastInsertId();
@@ -89,10 +78,10 @@ class Ville_model{
 
     ### CREATOR ###
 
-    public static function createVille($ville, $code_postal, $region, $pays){
+    public static function createVille($ville, $code_postal, $pays){
         $pdo = Database::connect();
-        $stmt = $pdo->prepare('INSERT INTO ville (ville, code_postal, region, pays) VALUES (:ville, :code_postal, :region, :pays)');
-        return $stmt->execute([':ville' => $ville, ':code_postal' => $code_postal, ':region' => $region, ':pays' => $pays]);
+        $stmt = $pdo->prepare('INSERT INTO ville (ville, code_postal, pays) VALUES (:ville, :code_postal, :pays)');
+        return $stmt->execute([':ville' => $ville, ':code_postal' => $code_postal, ':pays' => $pays]);
     }
 
     ### DELETORS ###
@@ -131,17 +120,6 @@ class Ville_model{
         }
         $stmt = $pdo->prepare('UPDATE ville SET code_postal = :code_postal WHERE id_ville = :id_ville');
         return $stmt->execute([':code_postal' => $code_postal, ':id_ville' => $id_ville]);
-    }
-
-    public static function updateRegion($id_ville, $region){
-        $pdo = Database::connect();
-        $id_ville = Database::validateParams($id_ville);
-        $region = Database::validateParams($region);
-        if (!is_numeric($id_ville)) {
-            throw new Exception("ID de ville invalide : $id_ville");
-        }
-        $stmt = $pdo->prepare('UPDATE ville SET region = :region WHERE id_ville = :id_ville');
-        return $stmt->execute([':region' => $region, ':id_ville' => $id_ville]);
     }
 
     public static function updatePays($id_ville, $pays){
