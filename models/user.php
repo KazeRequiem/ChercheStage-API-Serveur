@@ -132,11 +132,44 @@ class User_model{
             ':permission' => $permission,
             ':id_promotion' => $id_promotion
         ]);
-    
         $lastId = $pdo->lastInsertId();
         return self::getUserById($lastId);
     }
     
+
+    public static function createUser2($prenom, $nom, $email, $mdp, $tel, $date_naissance, $permission, $nom_promotion) {
+        $pdo = Database::connect();
+        $prenom = Database::validateParams($prenom);
+        $nom = Database::validateParams($nom);
+        $email = Database::validateParams($email);
+        $tel = Database::validateParams($tel);
+        $date_naissance = Database::validateParams($date_naissance);
+        $permission = Database::validateParams($permission);
+        $nom_promotion = Database::validateParams($nom_promotion);
+
+        $stmt = $pdo->prepare('SELECT id_promotion FROM promotion WHERE nom_promotion = :nom_promotion');
+        $stmt->execute([':nom_promotion' => $nom_promotion]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($result) {
+            $id_promotion = $result['id_promotion'];
+        } else {
+            throw new Exception("Promotion non trouvée : $nom_promotion");
+        }
+
+        $stmt = $pdo->prepare("INSERT INTO user (prenom, nom, email, mdp, tel, date_naissance, permission, id_promotion) VALUES (:prenom, :nom, :email, :mdp, :tel, :date_naissance, :permission, :id_promotion)");
+        $stmt->execute([
+            ':prenom' => $prenom,
+            ':nom' => $nom,
+            ':email' => $email,
+            ':mdp' => password_hash($mdp, PASSWORD_DEFAULT),
+            ':tel' => $tel,
+            ':date_naissance' => $date_naissance,
+            ':permission' => $permission,
+            ':id_promotion' => $id_promotion
+        ]);
+        $lastId = $pdo->lastInsertId();
+        return self::getUserById($lastId);
+    }
     ### DELETORS ###
 
     public static function deleteUser($id_user){

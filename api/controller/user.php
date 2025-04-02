@@ -48,10 +48,10 @@ switch ($method) {
             echo json_encode(["error" => "Permission insuffisante"]);
             exit;
         }
-        echo json_encode(User_model::createUser(
+        echo json_encode(User_model::createUser2(
             $data['prenom'], $data['nom'], $data['email'],
             $data['mdp'], $data['tel'], $data['date_naissance'],
-            $data['permission'], $data['id_promotion']
+            $data['permission'], $data['nom_promotion']
         ));
         break;
     
