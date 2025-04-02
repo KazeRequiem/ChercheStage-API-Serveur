@@ -8,6 +8,17 @@ if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
+// Permet les requêtes CORS
+header("Access-Control-Allow-Origin: *");  // Remplacez "*" par l'URL de votre frontend pour plus de sécurité
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
+
+// Si c'est une requête OPTIONS, on répond immédiatement sans continuer l'exécution
+if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+    http_response_code(200);
+    exit;
+}
+
 $method = $_SERVER['REQUEST_METHOD'];
 $request = explode("/", trim($_SERVER['REQUEST_URI'], "/"));
 $action = $request[count($request) - 1];
