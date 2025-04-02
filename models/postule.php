@@ -123,7 +123,7 @@ class Postule_model{
     public static function deletePostuleByIdEntreprise($id_entreprise){
         $pdo = Database::connect();
         $id_entreprise = Database::validateParams($id_entreprise);
-        $stmt = $pdo->prepare('DELETE FROM postule WHERE id_offre IN (SELECT id_offre FROM offre WHERE id_entreprise = :id_entreprise)');
+        $stmt = $pdo->prepare('DELETE FROM postule WHERE id_offre IN (SELECT id_offre FROM offres WHERE id_entreprise = :id_entreprise)');
         return $stmt->execute([':id_entreprise'=> $id_entreprise]);
     }
 
