@@ -81,13 +81,17 @@ class Postule_model{
         $result =  $stmt->fetch(PDO::FETCH_ASSOC);
         return $result['lettre_motivation'];
     }
-
     public static function getTauxReponseEntreprises(){
         $pdo = Database::connect();
-        $stmt = $pdo->prepare('SELECT COUNT(*) as taux FROM postule WHERE status = 1 OR status = 2');
+        $stmt = $pdo->prepare("
+            SELECT 
+                (COUNT(CASE WHEN status IN (1,2) THEN 1 END) * 100.0) / COUNT(*) AS taux_reponse 
+            FROM postule
+        ");
         $stmt->execute();
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $result['taux'];
+        
+        return $result ? round($result['taux_reponse'], 2) : 0;
     }
 
     ### CREATORS ###
