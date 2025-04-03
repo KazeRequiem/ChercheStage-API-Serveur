@@ -82,6 +82,14 @@ class Postule_model{
         return $result['lettre_motivation'];
     }
 
+    public static function getTauxReponseEntreprises(){
+        $pdo = Database::connect();
+        $stmt = $pdo->prepare('SELECT COUNT(*) as taux FROM postule WHERE status = 1 OR status = 2');
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['taux'];
+    }
+
     ### CREATORS ###
 
     public static function createPostule($id_offre, $id_user, $date, $cv, $lettre_motivation, $status){ ## en attente : 0, refus : 1, accepté : 2

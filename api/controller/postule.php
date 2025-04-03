@@ -27,7 +27,9 @@ switch ($method) {
             echo json_encode(Postule_model::getPostuleByIdUser($action));
         } elseif (isset($_GET['id_offre'])) {
             echo json_encode(Postule_model::getPostuleByIdOffre($_GET['id_offre']));
-        } elseif (isset($_GET['id_offre'], $_GET['id_user'])) {
+        } elseif (isset($_GET['taux'])) {
+            echo json_encode(Postule_model::getTauxReponseEntreprises());
+        }elseif (isset($_GET['id_offre'], $_GET['id_user'])) {
             echo json_encode(Postule_model::getPostuleById($_GET['id_offre'], $_GET['id_user']));
         } elseif ($action === 'cv' && isset($_GET['id_offre'], $_GET['id_user'])) {
             echo json_encode(["cv" => Postule_model::getCvOfPostule($_GET['id_offre'], $_GET['id_user'])]);
