@@ -104,6 +104,14 @@ class User_model{
         return $result['id_user'];
     }
 
+    public static function getNbEtudiant(){
+        $pdo = Database::connect();
+        $stmt = $pdo->prepare('SELECT COUNT(*) as nb_etudiant FROM user WHERE permission = 0');
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['nb_etudiant'];
+    }
+
     ### CREATORS ###
 
     public static function createUser($prenom, $nom, $email, $mdp, $tel, $date_naissance, $permission, $id_promotion) {

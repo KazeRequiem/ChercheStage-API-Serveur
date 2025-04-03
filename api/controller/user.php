@@ -31,7 +31,9 @@ switch ($method) {
             echo json_encode(User_model::getUserByNom($_GET['nom']));
         } elseif (isset($_GET['email'])) {
             echo json_encode(User_model::getUserByEmail($_GET['email']));
-        } elseif (isset($_GET['tel'])) {
+        } elseif (isset($_GET['nb_etudiant'])) {
+            echo json_encode(User_model::getNbEtudiant());
+        }elseif (isset($_GET['tel'])) {
             echo json_encode(User_model::getUserByTel($_GET['tel']));
         } else {
             http_response_code(400);
