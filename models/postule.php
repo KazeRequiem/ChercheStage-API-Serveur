@@ -90,6 +90,14 @@ class Postule_model{
         return $result['taux'];
     }
 
+    public static function getNbReponsesByIdEtudiant($id_etudiant){
+        $pdo = Database::connect();
+        $id_etudiant = Database::validateParams($id_etudiant);
+        $stmt = $pdo->prepare('SELECT COUNT(*) as nb_reponses FROM postule WHERE id_user = :id_user AND (status = 1 OR status = 2)');
+        $stmt->execute([':id_user' => $id_etudiant]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['nb_reponses'];
+    }
     ### CREATORS ###
 
     public static function createPostule($id_offre, $id_user, $date, $cv, $lettre_motivation, $status){ ## en attente : 0, refus : 1, accepté : 2
