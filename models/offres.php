@@ -81,6 +81,13 @@ class Offre_model{
         return $result['id_offre'];
     }
 
+    public static function getNbOffres(){
+        $pdo = Database::connect();
+        $stmt = $pdo->prepare('SELECT COUNT(*) as nb_offres FROM offres');
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['nb_offres'];
+    }
     public static function getAllOffreSortByNom(){
         $pdo = Database::connect();
         $stmt = $pdo->prepare('SELECT * FROM offres ORDER BY titre');

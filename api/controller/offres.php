@@ -44,7 +44,9 @@ switch ($method) {
         echo json_encode(Offre_model::getOffreByTypeContrat($_GET['type_contrat']));
     } elseif (isset($_GET['mot_cle'])) {
         echo json_encode(Offre_model::getOffreByMotCle($_GET['mot_cle']));
-    } elseif (isset($_GET['ville'])) {
+    } elseif (isset($_GET['nb_offres'])) {
+        echo json_encode(['nb_offres' => Offre_model::getNbOffres()]);
+    }elseif (isset($_GET['ville'])) {
         echo json_encode(Offre_model::getAllOffresByVille($_GET['ville']));
     }elseif (isset($_GET['id'])) {
         echo json_encode(Offre_model::getNomOffreById($_GET['id']));
