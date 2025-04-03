@@ -116,6 +116,18 @@ class Entreprise_model{
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public static function getNomEntrepriseById($id_entreprise){
+        $pdo = Database::connect();
+        $id_entreprise = Database::validateParams($id_entreprise);
+        if (!is_numeric($id_entreprise)) {
+            throw new Exception("ID d'entreprise invalide : $id_entreprise");
+        }
+        $stmt = $pdo->prepare('SELECT nom FROM entreprise WHERE id_entreprise = :id_entreprise');
+        $stmt->execute([':id_entreprise' => $id_entreprise]);
+        $result =  $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['nom'];
+    }
+
     ###CREATORS###
 
     public static function createEntreprise($nom, $email, $description, $tel, $logo, $ville, $code_postal, $pays){

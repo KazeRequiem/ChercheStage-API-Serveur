@@ -52,7 +52,9 @@ switch ($method) {
             echo json_encode(Entreprise_model::getAllEntreprisesByCodePostal($_GET['code_postal']));
         } elseif (isset($_GET['pays'])) {
             echo json_encode(Entreprise_model::getAllEntreprisesByPays($_GET['pays']));
-        } elseif (isset($_GET['sort'])) {
+        } elseif (isset($_GET['id_entreprise'])) {
+            echo json_encode(Entreprise_model::getNomEntrepriseById($_GET['id_entreprise']));
+        }elseif (isset($_GET['sort'])) {
             switch ($_GET['sort']) {
                 case 'nom':
                     echo json_encode(Entreprise_model::getAllEntreprisesSortByNom());
