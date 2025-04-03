@@ -137,6 +137,17 @@ class Offre_model{
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public static function getNomOffreById($id){
+        $pdo = Database::connect();
+        $id = Database::validateParams($id);
+        if (!is_numeric($id)) {
+            throw new Exception("ID d'offre invalide : $id");
+        }
+        $stmt = $pdo->prepare('SELECT titre FROM offres WHERE id_offre = :id');
+        $stmt->execute([':id' => $id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
     ### CREATORS ###
 
     public static function createOffre($titre, $description, $date_debut, $date_fin, $id_entreprise, $type_contrat, $salaire){

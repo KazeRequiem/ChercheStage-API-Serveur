@@ -46,6 +46,8 @@ switch ($method) {
         echo json_encode(Offre_model::getOffreByMotCle($_GET['mot_cle']));
     } elseif (isset($_GET['ville'])) {
         echo json_encode(Offre_model::getAllOffresByVille($_GET['ville']));
+    }elseif (isset($_GET['id'])) {
+        echo json_encode(Offre_model::getNomOffreById($_GET['id']));
     }elseif (isset($_GET['sort'])) {
         switch ($_GET['sort']) {
             case 'nom':
