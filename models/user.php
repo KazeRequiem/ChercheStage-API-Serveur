@@ -3,6 +3,7 @@ require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/postule.php';
 require_once __DIR__ . '/favoris.php';
 require_once __DIR__ . '/note.php';
+require_once __DIR__ . '/ticket.php';
 
 class User_model{
 
